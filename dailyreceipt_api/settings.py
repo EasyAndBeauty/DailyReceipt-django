@@ -18,7 +18,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+ENVIRONMENT = os.environ.get("DJANGO_ENV", "development")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -127,37 +127,34 @@ LOGGING = {
         },
     },
     "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "/home/ubuntu/app/django-debug.log",
-            "formatter": "verbose",
-        },
         "console": {
-            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
     },
     "loggers": {
         "django": {
-            "handlers": ["file", "console"],
+            "handlers": ["console"],
             "level": "DEBUG",
             "propagate": True,
         },
         "django.request": {
-            "handlers": ["file", "console"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-        "django.server": {
-            "handlers": ["file", "console"],
+            "handlers": ["console"],
             "level": "DEBUG",
             "propagate": True,
         },
     },
 }
 
+if ENVIRONMENT == "production":
+    LOGGING["handlers"]["file"] = {
+        "level": "DEBUG",
+        "class": "logging.FileHandler",
+        "filename": "/home/ubuntu/app/django-debug.log",
+        "formatter": "verbose",
+    }
+    LOGGING["loggers"]["django"]["handlers"].append("file")
+    LOGGING["loggers"]["django.request"]["handlers"].append("file")
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
