@@ -135,12 +135,12 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": os.getenv("LOG_LEVEL", "INFO"),
             "propagate": True,
         },
         "django.request": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": os.getenv("LOG_LEVEL", "INFO"),
             "propagate": True,
         },
     },
